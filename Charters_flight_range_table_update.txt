@@ -10,8 +10,15 @@ print(xls.sheet_names)
 
 
 #modify data
-client_flight_ranges = xls.parse("Flight ranges",header=None)
+client_data = xls.parse("Flight ranges",header=None)
 routes = xls.parse("Routes",header=0)
+
+#change column names
+client_data.columns = ['Client', 'From_', 'To_']
+
+#tidy the data
+#remove nulls
+client_data.dropna(inplace=True)
 
 
 #create day of week list and dataframe
@@ -37,15 +44,25 @@ print(routes_list)
 
 #iterate over tables to create flight range table
 dow = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+#print(flight_range)
 routes_list = routes['Departure Port'].unique()
 
+output = []
+
 for row in flight_range:
-    
+        
     for day in dow:
         
         for dep in routes_list:
         
             array = np.array([row,day,dep])
-        
-        
-        print(array)
+
+
+
+#iterate through client table
+
+clients_table = {}
+
+#for i in range(len(client_data.loc[1,:])):
+for client, From_, To_ in client_data.iterrows():
+    print(client, From,)
