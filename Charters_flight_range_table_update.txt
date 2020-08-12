@@ -1,0 +1,51 @@
+#import packages
+import pandas as pd
+import numpy as np
+
+
+#import data
+file= r'\\corp.qf.qantas.com.au\Profiles\SYDQCX\207634\My Documents\GitHub\hello_world\Charters_data.xlsx'
+xls=pd.ExcelFile(file)
+print(xls.sheet_names)
+
+
+#modify data
+client_flight_ranges = xls.parse("Flight ranges",header=None)
+routes = xls.parse("Routes",header=0)
+
+
+#create day of week list and dataframe
+dow = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+'''dow_df = pd.DataFrame(dow)'''
+print(dow_df.head())
+
+
+#create range of flight numbers
+
+flight_range = []
+
+for row in range(1300,1350):
+    flight_range.append(row)
+    
+print(flight_range)
+
+
+#create list of routes
+routes_list = routes['Departure Port'].unique()
+print(routes_list)
+
+
+#iterate over tables to create flight range table
+dow = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
+routes_list = routes['Departure Port'].unique()
+
+for row in flight_range:
+    
+    for day in dow:
+        
+        for dep in routes_list:
+        
+            array = np.array([row,day,dep])
+        
+        
+        print(array)
