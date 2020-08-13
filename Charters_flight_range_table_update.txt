@@ -10,20 +10,33 @@ print(xls.sheet_names)
 
 
 #modify data
-client_data = xls.parse("Flight ranges",header=None)
+client_data = xls.parse("Flight_ranges(2)")
 routes = xls.parse("Routes",header=0)
 
-#change column names
-client_data.columns = ['Client', 'From_', 'To_']
 
-#tidy the data
-#remove nulls
-client_data.dropna(inplace=True)
+print(client_data.columns)
+
+
+#explore the data
+client_data.head()
+#client_data.describe()
+#client_data.info()
+
+
+#convert to pandas DataFrame
+df2= pd.DataFrame(client_data)
+print(df2.shape)
+print(df2.columns)
+
+
+#routes.head()
+routes.info()
+routes.describe()
 
 
 #create day of week list and dataframe
 dow = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']
-'''dow_df = pd.DataFrame(dow)'''
+dow_df = pd.DataFrame(dow)
 print(dow_df.head())
 
 
@@ -31,7 +44,7 @@ print(dow_df.head())
 
 flight_range = []
 
-for row in range(1300,1350):
+for row in range(1300,2969):
     flight_range.append(row)
     
 print(flight_range)
@@ -54,15 +67,57 @@ for row in flight_range:
     for day in dow:
         
         for dep in routes_list:
+            output.append([row,day,dep])
         
-            array = np.array([row,day,dep])
+            #array = np.array([row,day,dep])
+            #dframe= pd.DataFrame([row,day,dep])
+            #output.append(array)
+        
+            #print(output)
+            #print(dframe)
+df1= pd.DataFrame(output)
+df1.columns = ['Flight_Num','dow', 'dep_port']
+print(df1.head())
+print(df1.tail())
 
 
+#inspect df1
+print(df1.columns)
+print(df1.shape)
 
-#iterate through client table
+#inspect df2
+print(df2.columns)
 
-clients_table = {}
 
-#for i in range(len(client_data.loc[1,:])):
-for client, From_, To_ in client_data.iterrows():
-    print(client, From,)
+#merge dataframes - client data with routes
+df1= pd.DataFrame(output)
+df2= pd.DataFrame(client_data)
+
+result2 = df1.merge(df2,how='outer',left_on=[0],right_on=['Flight_num']).drop(['Flight_num'], axis= 1)
+
+#change column names
+result2.columns = ['Flight Number','WeekDay','Departure Port IATA','Charter Clients']
+
+# rearrange order of columns
+result2= result2[['Flight Number','Charter Clients','WeekDay','Departure Port IATA']]
+
+print(result2.shape)
+print(result2.head())
+#print(result2.columns)
+print(result2.tail())
+
+
+#create calculated fields
+
+result2['Flight_No-DOW'] = result2['Flight Number'].astype(str)+"-"+result2['WeekDay']
+print(result2['Flight_No-DOW'].head())
+
+result2['%MKey_FLT_DEP_CLIENTS%'] = result2['Flight Number'].astype(str)+result2['Departure Port IATA']+result2['WeekDay']
+print(result2['%MKey_FLT_DEP_CLIENTS%'].head())
+
+
+###export data to csv
+### refer https://datatofish.com/export-dataframe-to-csv/#:~:text=Export%20Pandas%20DataFrame%20to%20a%20CSV%20file%20using%20Tkinter&text=Make%20sure%20to%20adjust%20the,with%20your%20own%20tailored%20DataFrame.&text=Click%20on%20the%20'Export%20CSV,to%20choose%20the%20export%20location.
+file_name_loc = r'\\corp.qf.qantas.com.au\Profiles\SYDQCX\207634\My Documents\GitHub\hello_world\Charters_data_out.csv'
+
+result2.to_csv(file_name_loc, index = False, header=True)
