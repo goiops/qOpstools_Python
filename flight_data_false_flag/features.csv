@@ -1,0 +1,8 @@
+p14_event_record,Feature,Value
+40692539,event_type_Airborne Speed High,0.07481613831490502
+40692539,p14_duration_of_event_seconds,-0.06763399365294058
+40692539,p14_end_of_event_10_seconds_seconds_from_start_of_file,-0.06072084887043677
+40692539,p14_estimated_nav_error_at_start_of_event_nm,-0.01860927305507768
+40692539,p14_start_of_event_10_seconds_seconds_from_start_of_file,-0.015025925329060405
+40692539,p14_flap_position_at_start_of_event_deg_ted,0.010492031330000156
+40692539,event_type_Late Land Flap Selection,-0.0015011553083303917
